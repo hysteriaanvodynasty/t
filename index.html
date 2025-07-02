@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hysteriá Anvo Dynásty</title>
+    <style>
+        :root {
+            --black: #000000;
+            --white: #FFFFFF;
+            --red: #FF0000;
+            --gray: #EEEEEE;
+            --dark-gray: #222222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Now Display', Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Ultra-minimalist header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--white);
+            border-bottom: 1px solid var(--black);
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--black);
+            font-family: 'Helvetica Now Display', sans-serif;
+        }
+
+        .logo span {
+            font-weight: 700;
+        }
+
+        .nav-container {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-tab {
+            color: var(--black);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            opacity: 0.7;
+        }
+
+        .nav-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--black);
+            transition: width 0.3s ease;
+        }
+
+        .nav-tab:hover::after {
+            width: 100%;
+        }
+
+        /* Main content with extreme minimalism */
+        main {
+            flex: 1;
+            padding: 8rem 2rem 2rem;
+        }
+
+        .category-title {
+            font-size: 3rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        /* Product grid with oversized look */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .product-card {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .product-card:hover {
+            transform: scale(1.03);
+        }
+
+        .product-image-container {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .product-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .product-price {
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        /* Modal with full-bleed design */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--white);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--black);
+            position: sticky;
+            top: 0;
+            background-color: var(--white);
+            z-index: 10;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--black);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .modal-body {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .product-gallery {
+            display: grid;
+            grid-template-columns: 1fr;
+            flex: 1;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 70vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            overflow-x: auto;
+            border-top: 1px solid var(--black);
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .thumbnail:hover {
+            border-color: var(--black);
+        }
+
+        .product-details {
+            padding: 2rem;
+            border-top: 1px solid var(--black);
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-label {
+            width: 150px;
+            font-weight: 400;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            flex: 1;
+            font-weight: 300;
+        }
+
+        .color-options-large {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .color-option-large {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid var(--black);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .color-option-large:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option-large.selected {
+            border-width: 2px;
+        }
+
+        select {
+            background-color: transparent;
+            border: 1px solid var(--black);
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            width: 100px;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1rem;
+        }
+
+        .buy-btn {
+            background-color: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .buy-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Payment modal with stark contrast */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--black);
+            color: var(--white);
+            z-index: 3000;
+        }
+
+        .payment-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--white);
+        }
+
+        .payment-title {
+            font-size: 1.2rem;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            flex: 1;
+            background-color: var(--white);
+        }
+
+        .payment-option {
+            background-color: var(--black);
+            border: none;
+            color: var(--white);
+            padding: 2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            border: 1px solid var(--white);
+        }
+
+        .payment-option:hover {
+            background-color: var(--dark-gray);
+        }
+
+        .payment-option img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .wallet-address {
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--white);
+        }
+
+        .address-box {
+            background-color: var(--dark-gray);
+            padding: 1.5rem;
+            border-radius: 0;
+            margin-top: 1.5rem;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            background-color: var(--white);
+            color: var(--black);
+            border: none;
+            padding: 1rem 2rem;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Footer with micro typography */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--black);
+        }
+
+        .footer-text {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-container {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            main {
+                padding: 7rem 1rem 1rem;
+            }
+
+            .category-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .modal-header, .payment-header {
+                padding: 1rem;
+            }
+
+            .main-image {
+                height: 50vh;
+            }
+
+            .product-details {
+                padding: 1rem;
+            }
+
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Balenciaga-style animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        /* Loading state */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading screen -->
+    <div class="loading">
+        <div class="loading-text">Hysteriá Anvo Dynásty<br>Alexandere Wendo</div>
+    </div>
+
+    <header>
+        <div class="logo">Hysteriá <span>Anvo Dynásty</span></div>
+        <div class="nav-container">
+            <a href="#" class="nav-tab" data-category="t-shirt">T-Shirts</a>
+            <a href="#" class="nav-tab" data-category="long-sleeves">Long Sleeves</a>
+            <a href="#" class="nav-tab" data-category="zip-hoodie">Zip Hoodies</a>
+            <a href="#" class="nav-tab" data-category="hoodie">Hoodies</a>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="category-title" id="category-title">T-Shirts</h1>
+        
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card slide-up" data-id="1">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/800x1000/FFFFFF/000000?text=HAD+T-Shirt+1" alt="H.A.D & Undercover ALTERNATIVE T-Shirt" class="product-image">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">H.A.D & Undercover ALTERNATIVE T-Shirt</h3>
+                    <div class="product-price">$89.99</div>
+                </div>
+            </div>
+            
+            <!-- Product 2 -->
+            <div class="product-card slide-up" data-id="2">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/800x1000/FFFFFF/000000?text=HAD+T-Shirt+2" alt="H.A.D Gun Club 88 T-Shirt" class="product-image">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">H.A.D Gun Club 88 T-Shirt</h3>
+                    <div class="product-price">$79.99</div>
+                </div>
+            </div>
+            
+            <!-- Product 3 -->
+            <div class="product-card slide-up" data-id="3">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/800x1000/000000/FFFFFF?text=HAD+Long+Sleeve" alt="HAD Oversized Long Sleeve" class="product-image">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">HAD Oversized Long Sleeve</h3>
+                    <div class="product-price">$119.99</div>
+                </div>
+            </div>
+            
+            <!-- Product 4 -->
+            <div class="product-card slide-up" data-id="4">
+                <div class="product-image-container">
+                    <img src="https://via.placeholder.com/800x1000/FFFFFF/000000?text=HAD+Zip+Hoodie" alt="HAD Zipped Hoodie" class="product-image">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">HAD Zipped Hoodie</h3>
+                    <div class="product-price">$159.99</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">H.A.D & Undercover ALTERNATIVE T-Shirt</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="product-gallery">
+                    <img src="https://via.placeholder.com/1200x1500/FFFFFF/000000?text=HAD+T-Shirt+1+Front" alt="Product Front" class="main-image">
+                    <div class="thumbnail-container">
+                        <img src="https://via.placeholder.com/400x500/FFFFFF/000000?text=HAD+T-Shirt+1+Front" alt="Front" class="thumbnail">
+                        <img src="https://via.placeholder.com/400x500/FFFFFF/000000?text=HAD+T-Shirt+1+Back" alt="Back" class="thumbnail">
+                        <img src="https://via.placeholder.com/400x500/FFFFFF/000000?text=HAD+T-Shirt+1+Detail" alt="Detail" class="thumbnail">
+                    </div>
+                </div>
+                
+                <div class="product-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Price</div>
+                        <div class="detail-value">$89.99</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Description</div>
+                        <div class="detail-value">H.A.D & Undercover Collaboration T-Shirt Alexander Wendo & Jun Takahashi | Premium cotton | Made In Stockholm</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Color</div>
+                        <div class="color-options-large">
+                            <div class="color-option-large selected" style="background-color: #FFFFFF;"></div>
+                            <div class="color-option-large" style="background-color: #000000;"></div>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Size</div>
+                        <select>
+                            <option>S</option>
+                            <option>M</option>
+                            <option>L</option>
+                            <option>XL</option>
+                        </select>
+                    </div>
+                    
+                    <button class="buy-btn">Purchase</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="payment-modal">
+        <div class="payment-content">
+            <div class="payment-header">
+                <h2 class="payment-title">Select Payment Method</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="payment-options">
+                <button class="payment-option" data-currency="toncoin">
+                    <img src="https://ton.org/download/ton_symbol.png" alt="Toncoin">
+                    <span>Toncoin</span>
+                </button>
+                <button class="payment-option" data-currency="litecoin">
+                    <img src="https://png.pngtree.com/png-vector/20220606/ourmid/pngtree-litecoin-ltc-token-symbol-cryptocurrency-logo-png-image_4865950.png" alt="Litecoin">
+                    <span>Litecoin</span>
+                </button>
+                <button class="payment-option" data-currency="bitcoin">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png" alt="Bitcoin">
+                    <span>Bitcoin</span>
+                </button>
+                <button class="payment-option" data-currency="solana">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png" alt="Solana">
+                    <span>Solana</span>
+                </button>
+                <button class="payment-option" data-currency="tron">
+                    <img src="https://cdn-icons-png.flaticon.com/512/12114/12114250.png" alt="Tron">
+                    <span>Tron</span>
+                </button>
+                <button class="payment-option" data-currency="usdt">
+                    <img src="https://cdn.worldvectorlogo.com/logos/tether-1.svg" alt="USDT">
+                    <span>Tether USDT</span>
+                </button>
+            </div>
+            
+            <div class="wallet-address" id="walletAddressSection" style="display: none;">
+                <h3>Send Payment To</h3>
+                <div class="address-box" id="walletAddress">
+                    EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N
+                </div>
+                <button class="copy-btn" id="copyBtn">Copy Address</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-text">© 2025 Hysteriá Anvo Dynásty. Made In Stockholm. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Simulate loading
+        setTimeout(() => {
+            document.querySelector('.loading').style.display = 'none';
+            document.querySelectorAll('.slide-up').forEach(el => {
+                el.style.opacity = 1;
+                el.style.transform = 'translateY(0)';
+            });
+        }, 1500);
+
+        // Product data
+        const colorNames = {
+            '#000000': 'black',
+            '#FFFFFF': 'white'
+        };
+
+        const productsData = {
+            't-shirt': [
+                {
+                    id: 1,
+                    name: "H.A.D & Undercover ALTERNATIVE T-Shirt",
+                    price: 89.99,
+                    colors: ['#FFFFFF', '#000000'],
+                    sizes: ['S', 'M', 'L', 'XL'],
+                    description: "H.A.D & Undercover Collaboration T-Shirt Alexander Wendo & Jun Takahashi | Premium cotton | Made In Stockholm",
+                    imagesTemplate: {
+                        main: 'tshirt/product1/{color}_front.jpg',
+                    }
+                },
+                {
+                    id: 2,
+                    name: "H.A.D Gun Club 88 T-Shirt",
+                    price: 79.99,
+                    colors: ['#FFFFFF'],
+                    sizes: ['S', 'M', 'L', 'XL'],
+                    description: "H.A.D Gun club 88 T-SHIRT | Premium Cotton | Made In Stockholm",
+                    imagesTemplate: {
+                        main: 'tshirt/product2/{color}_front.jpg',
+                    }
+                }
+            ],
+            'long-sleeves': [
+                {
+                    id: 3,
+                    name: "H.A.D 4-Face Oversized Long Sleeve",
+                    price: 119.99,
+                    colors: ['#FFFFFF'],
+                    sizes: ['M', 'L', 'XL'],
+                    description: "H.A.D 4-Face Oversized fit long sleeve | Made In Stockholm",
+                    imagesTemplate: {
+                        main: 'longsleeves/product1/{color}_front.jpg',
+                        
+                    }
+                }
+            ],
+            'zip-hoodie': [
+                {
+                    id: 4,
+                    name: "HAD Zipped Hoodie",
+                    price: 159.99,
+                    colors: ['#FFFFFF', '#000000'],
+                    sizes: ['S', 'M', 'L', 'XL'],
+                    description: "Heavyweight zip hoodie with distressed details.",
+                    imagesTemplate: {
+                        main: 'ziphoodie/product1/{color}_front.jpg',
+                        back: 'ziphoodie/product1/{color}_back.jpg',
+                        detail: 'ziphoodie/product1/{color}_detail.jpg'
+                    }
+                }
+            ],
+            'hoodie': [
+                {
+                    id: 5,
+                    name: "HAD Oversized Hoodie",
+                    price: 149.99,
+                    colors: ['#000000', '#FFFFFF'],
+                    sizes: ['M', 'L', 'XL'],
+                    description: "Oversized hoodie with extended sleeves.",
+                    imagesTemplate: {
+                        main: 'hoodie/product1/{color}_front.jpg',
+                        back: 'hoodie/product1/{color}_back.jpg'
+                    }
+                }
+            ]
+        };
+
+        // Wallets for cryptocurrencies
+        const wallets = {
+            'toncoin': 'EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N',
+            'litecoin': 'LZ4FZwLSh8QnBuVU5peqFtRjX2h8J8YzVx',
+            'bitcoin': '3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5',
+            'solana': 'HN5XQ6LeFhZPF7U4SS7iU5YrAqLZ6SpWQ3J8XJmJ8kq1',
+            'tron': 'TYsmTdZ5GpW3q1jQ9Xh7nLp8oK2mN6vB4cV3xZ2',
+            'usdt': '0x4fabb145d64652a948d72533023f6e7a623c7c53',
+            'ethereum': '0x71C7656EC7ab88b098defB751B7401B5f6d8976F'
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const productGrid = document.querySelector('.products-grid');
+            const productModal = document.getElementById('productModal');
+            const paymentModal = document.getElementById('paymentModal');
+            const closeButtons = document.querySelectorAll('.close-btn');
+            const paymentOptions = document.querySelectorAll('.payment-option');
+            const walletAddressSection = document.getElementById('walletAddressSection');
+            const walletAddress = document.getElementById('walletAddress');
+            const copyBtn = document.getElementById('copyBtn');
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const categoryTitle = document.getElementById('category-title');
+            
+            let currentCategory = 't-shirt';
+            let currentProduct = null;
+            let currentColor = null;
+
+            // Generate image path based on color
+            function getImagePath(template, colorHex) {
+                const colorName = colorNames[colorHex];
+                return template.replace('{color}', colorName);
+            }
+
+            // Load products for a category
+            function loadProducts(category) {
+                productGrid.innerHTML = '';
+                currentCategory = category;
+                
+                if (!productsData[category]) return;
+                
+                productsData[category].forEach((product, index) => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
+                    productCard.setAttribute('data-id', product.id);
+                    productCard.style.animationDelay = `${index * 0.1}s`;
+                    
+                    const firstColor = product.colors[0];
+                    const mainImagePath = getImagePath(product.imagesTemplate.main, firstColor);
+                    
+                    productCard.innerHTML = `
+                        <div class="product-image-container">
+                            <img src="${mainImagePath}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/800x1000/FFFFFF/000000?text=Product+Image'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${product.name}</h3>
+                            <div class="product-price">$${product.price.toFixed(2)}</div>
+                        </div>
+                    `;
+                    
+                    productCard.addEventListener('click', () => openProductModal(product));
+                    productGrid.appendChild(productCard);
+                });
+            }
+            
+            // Open product modal
+            function openProductModal(product) {
+                currentProduct = product;
+                currentColor = product.colors[0];
+                
+                const modalTitle = document.querySelector('.modal-title');
+                modalTitle.textContent = product.name;
+                
+                const productGallery = document.querySelector('.product-gallery');
+                productGallery.innerHTML = '';
+                
+                // Main image
+                const mainImagePath = getImagePath(product.imagesTemplate.main, currentColor);
+                productGallery.innerHTML = `
+                    <img src="${mainImagePath}" alt="${product.name}" class="main-image" onerror="this.src='https://via.placeholder.com/1200x1500/FFFFFF/000000?text=Product+Image'">
+                    <div class="thumbnail-container"></div>
+                `;
+                
+                const thumbnailContainer = document.querySelector('.thumbnail-container');
+                
+                // Add thumbnails for all images
+                thumbnailContainer.innerHTML += `
+                    <img src="${mainImagePath}" alt="Front" class="thumbnail">
+                `;
+                
+                if (product.imagesTemplate.back) {
+                    const backImagePath = getImagePath(product.imagesTemplate.back, currentColor);
+                    thumbnailContainer.innerHTML += `
+                        <img src="${backImagePath}" alt="Back" class="thumbnail" onerror="this.src='https://via.placeholder.com/400x500/FFFFFF/000000?text=Product+Back'">
+                    `;
+                }
+                
+                if (product.imagesTemplate.detail) {
+                    const detailImagePath = getImagePath(product.imagesTemplate.detail, currentColor);
+                    thumbnailContainer.innerHTML += `
+                        <img src="${detailImagePath}" alt="Detail" class="thumbnail" onerror="this.src='https://via.placeholder.com/400x500/FFFFFF/000000?text=Product+Detail'">
+                    `;
+                }
+                
+                // Update product details
+                const productDetails = document.querySelector('.product-details');
+                productDetails.innerHTML = `
+                    <div class="detail-row">
+                        <div class="detail-label">Price</div>
+                        <div class="detail-value">$${product.price.toFixed(2)}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Description</div>
+                        <div class="detail-value">${product.description}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Color</div>
+                        <div class="color-options-large">
+                            ${product.colors.map((color, index) => `
+                                <div class="color-option-large ${index === 0 ? 'selected' : ''}" style="background-color: ${color};" data-color="${color}"></div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Size</div>
+                        <select id="sizeSelect">
+                            ${product.sizes.map(size => `<option>${size}</option>`).join('')}
+                        </select>
+                    </div>
+                    <button class="buy-btn">Purchase</button>
+                `;
+                
+                // Set up color selection
+                document.querySelectorAll('.color-option-large').forEach(option => {
+                    option.addEventListener('click', function() {
+                        document.querySelectorAll('.color-option-large').forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        currentColor = this.getAttribute('data-color');
+                        
+                        // Update main image
+                        const mainImagePath = getImagePath(product.imagesTemplate.main, currentColor);
+                        document.querySelector('.main-image').src = mainImagePath;
+                    });
+                });
+                
+                // Set up thumbnail clicks
+                document.querySelectorAll('.thumbnail').forEach(thumb => {
+                    thumb.addEventListener('click', function() {
+                        document.querySelector('.main-image').src = this.src;
+                    });
+                });
+                
+                // Set up buy button
+                document.querySelector('.buy-btn').addEventListener('click', function() {
+                    productModal.style.display = 'none';
+                    paymentModal.style.display = 'block';
+                    walletAddressSection.style.display = 'none';
+                });
+                
+                // Show modal
+                productModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // Initialize with first category
+            loadProducts(currentCategory);
+            
+            // Navigation tabs
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.getAttribute('data-category');
+                    
+                    switch(category) {
+                        case 't-shirt':
+                            categoryTitle.textContent = 'T-Shirts';
+                            break;
+                        case 'long-sleeves':
+                            categoryTitle.textContent = 'Long Sleeves';
+                            break;
+                        case 'zip-hoodie':
+                            categoryTitle.textContent = 'Zip Hoodies';
+                            break;
+                        case 'hoodie':
+                            categoryTitle.textContent = 'Hoodies';
+                            break;
+                    }
+                    
+                    loadProducts(category);
+                });
+            });
+            
+            // Close modals
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    productModal.style.display = 'none';
+                    paymentModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+            });
+            
+            // Click outside modal to close
+            window.addEventListener('click', function(event) {
+                if (event.target === productModal) {
+                    productModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+                if (event.target === paymentModal) {
+                    paymentModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Payment options
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const currency = this.getAttribute('data-currency');
+                    walletAddress.textContent = wallets[currency];
+                    walletAddressSection.style.display = 'block';
+                });
+            });
+            
+            // Copy wallet address
+            copyBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText(walletAddress.textContent).then(() => {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy Address';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
