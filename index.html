@@ -37,12 +37,19 @@
             left: 0;
             width: 100%;
             z-index: 1000;
-            padding: 1.5rem 2rem;
+            padding: 1rem 2rem;
+            background-color: var(--white);
+            border-bottom: 1px solid var(--black);
+            display: flex;
+            flex-direction: column; /* Меняем на колонку */
+            gap: 1rem; /* Отступ между элементами */
+        }
+
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: var(--white);
-            border-bottom: 1px solid var(--black);
+            width: 100%;
         }
 
         .logo {
@@ -52,6 +59,7 @@
             text-transform: uppercase;
             color: var(--black);
             font-family: 'Helvetica Now Display', sans-serif;
+            white-space: nowrap; /* Запрещаем перенос текста */
         }
 
         .logo span {
@@ -60,7 +68,15 @@
 
         .nav-container {
             display: flex;
-            gap: 3rem;
+            gap: 1.5rem;
+            width: 100%;
+            overflow-x: auto; /* Добавляем горизонтальную прокрутку если не помещается */
+            padding-bottom: 0.5rem; /* Для скроллбара */
+            scrollbar-width: none; /* Скрываем скроллбар для Firefox */
+        }
+
+        .nav-container::-webkit-scrollbar {
+            display: none; /* Скрываем скроллбар для Chrome/Safari */
         }
 
         .nav-tab {
@@ -72,6 +88,8 @@
             letter-spacing: 1px;
             transition: opacity 0.3s ease;
             position: relative;
+            white-space: nowrap; /* Запрещаем перенос текста */
+            padding: 0.5rem 0; /* Увеличиваем область клика */
         }
 
         .nav-tab:hover {
@@ -332,10 +350,12 @@
             background-color: var(--black);
             color: var(--white);
             z-index: 3000;
+            overflow-y: auto; /* Добавляем возможность прокрутки */
         }
 
+
         .payment-content {
-            height: 100%;
+            min-height: 100vh; /* Минимальная высота - весь экран */
             display: flex;
             flex-direction: column;
         }
@@ -434,51 +454,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            header {
-                padding: 1rem;
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .nav-container {
-                gap: 1.5rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            main {
-                padding: 7rem 1rem 1rem;
-            }
-
-            .category-title {
-                font-size: 2rem;
-                margin-bottom: 2rem;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .modal-header, .payment-header {
-                padding: 1rem;
-            }
-
-            .main-image {
-                height: 50vh;
-            }
-
-            .product-details {
-                padding: 1rem;
-            }
-
-            .payment-options {
-                grid-template-columns: 1fr;
-            }
-        }
-
         /* Balenciaga-style animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -519,6 +494,203 @@
             text-align: center;
             line-height: 1.6;
         }
+
+        /* ========== АДАПТИВНЫЕ СТИЛИ ========== */
+        
+        /* Большие планшеты и маленькие ноутбуки (от 992px до 1199px) */
+        @media (max-width: 1199px) {
+            .products-grid {
+                gap: 2rem;
+            }
+            
+            .category-title {
+                font-size: 2.5rem;
+            }
+            
+            .modal-header, .payment-header {
+                padding: 1.2rem;
+            }
+            
+            .main-image {
+                height: 60vh;
+            }
+        }
+        
+        /* Планшеты (от 768px до 991px) */
+        @media (max-width: 991px) {
+            header {
+                padding: 1rem;
+            }
+            
+            .nav-container {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .logo {
+                font-size: 1rem;
+            }
+            
+            .nav-tab {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 575px) {
+            header {
+                padding: 0.8rem;
+                gap: 0.8rem;
+            }
+            
+            .logo {
+                font-size: 0.9rem;
+            }
+            
+            .nav-tab {
+                font-size: 0.7rem;
+                padding: 0.3rem 0;
+            }
+        }
+        
+        /* Маленькие планшеты и большие телефоны (от 576px до 767px) */
+        @media (max-width: 767px) {
+            .payment-options {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+            
+            .payment-option {
+                padding: 1.5rem;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 1rem;
+            }
+            
+            .payment-option img {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .wallet-address {
+                padding: 1.5rem;
+                position: relative;
+            }
+            
+            .address-box {
+                margin-top: 1rem;
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .copy-btn {
+                position: sticky;
+                bottom: 1rem;
+                width: calc(100% - 3rem);
+                margin: 1rem auto 0;
+                z-index: 10;
+            }
+        }
+
+        /* Анимация появления адреса */
+        .wallet-address {
+            transition: all 0.3s ease;
+        }
+        /* Большие телефоны (от 576px до 767px) */
+        
+        /* Маленькие телефоны (до 575px) */
+        @media (max-width: 575px) {
+            .logo {
+                font-size: 1rem;
+            }
+            
+            .nav-tab {
+                font-size: 0.8rem;
+            }
+            
+            .category-title {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .main-image {
+                height: 40vh;
+            }
+            
+            .modal-title, .payment-title {
+                font-size: 1rem;
+            }
+            
+            .thumbnail-container {
+                padding: 1rem;
+            }
+            
+            .thumbnail {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .buy-btn {
+                padding: 1rem;
+                margin-top: 1.5rem;
+            }
+            
+            .address-box {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .copy-btn {
+                padding: 0.8rem 1.5rem;
+            }
+        }
+        
+        /* Очень маленькие телефоны (до 400px) */
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 0.9rem;
+            }
+            
+            .nav-tab {
+                font-size: 0.7rem;
+            }
+            
+            .category-title {
+                font-size: 1.3rem;
+            }
+            
+            .product-title {
+                font-size: 0.9rem;
+            }
+            
+            .product-price {
+                font-size: 0.8rem;
+            }
+            
+            .main-image {
+                height: 35vh;
+            }
+            
+            .thumbnail {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .color-option-large {
+                width: 25px;
+                height: 25px;
+            }
+            
+            select {
+                width: 80px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -528,7 +700,9 @@
     </div>
 
     <header>
-        <div class="logo">Hysteriá <span>Anvo Dynásty</span></div>
+        <div class="header-top">
+            <div class="logo">Hysteriá <span>Anvo Dynásty</span></div>
+        </div>
         <div class="nav-container">
             <a href="#" class="nav-tab" data-category="t-shirt">T-Shirts</a>
             <a href="#" class="nav-tab" data-category="long-sleeves">Long Sleeves</a>
@@ -638,47 +812,48 @@
 
     <!-- Payment Modal -->
     <div id="paymentModal" class="payment-modal">
-        <div class="payment-content">
-            <div class="payment-header">
-                <h2 class="payment-title">Select Payment Method</h2>
-                <button class="close-btn">&times;</button>
-            </div>
-            <div class="payment-options">
-                <button class="payment-option" data-currency="toncoin">
-                    <img src="https://ton.org/download/ton_symbol.png" alt="Toncoin">
-                    <span>Toncoin</span>
-                </button>
-                <button class="payment-option" data-currency="litecoin">
-                    <img src="https://png.pngtree.com/png-vector/20220606/ourmid/pngtree-litecoin-ltc-token-symbol-cryptocurrency-logo-png-image_4865950.png" alt="Litecoin">
-                    <span>Litecoin</span>
-                </button>
-                <button class="payment-option" data-currency="bitcoin">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png" alt="Bitcoin">
-                    <span>Bitcoin</span>
-                </button>
-                <button class="payment-option" data-currency="solana">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png" alt="Solana">
-                    <span>Solana</span>
-                </button>
-                <button class="payment-option" data-currency="tron">
-                    <img src="https://cdn-icons-png.flaticon.com/512/12114/12114250.png" alt="Tron">
-                    <span>Tron</span>
-                </button>
-                <button class="payment-option" data-currency="usdt">
-                    <img src="https://cdn.worldvectorlogo.com/logos/tether-1.svg" alt="USDT">
-                    <span>Tether USDT</span>
-                </button>
-            </div>
-            
-            <div class="wallet-address" id="walletAddressSection" style="display: none;">
-                <h3>Send Payment To</h3>
-                <div class="address-box" id="walletAddress">
-                    EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N
+            <div class="payment-content">
+                <div class="payment-header">
+                    <h2 class="payment-title">Select Payment Method</h2>
+                    <button class="close-btn">&times;</button>
                 </div>
-                <button class="copy-btn" id="copyBtn">Copy Address</button>
+                <div class="payment-options">
+                    <button class="payment-option" data-currency="toncoin">
+                        <img src="https://ton.org/download/ton_symbol.png" alt="Toncoin">
+                        <span>Toncoin</span>
+                    </button>
+                    <button class="payment-option" data-currency="litecoin">
+                        <img src="https://png.pngtree.com/png-vector/20220606/ourmid/pngtree-litecoin-ltc-token-symbol-cryptocurrency-logo-png-image_4865950.png" alt="Litecoin">
+                        <span>Litecoin</span>
+                    </button>
+                    <button class="payment-option" data-currency="bitcoin">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png" alt="Bitcoin">
+                        <span>Bitcoin</span>
+                    </button>
+                    <button class="payment-option" data-currency="solana">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png" alt="Solana">
+                        <span>Solana</span>
+                    </button>
+                    <button class="payment-option" data-currency="tron">
+                        <img src="https://cdn-icons-png.flaticon.com/512/12114/12114250.png" alt="Tron">
+                        <span>Tron</span>
+                    </button>
+                    <button class="payment-option" data-currency="usdt">
+                        <img src="https://cdn.worldvectorlogo.com/logos/tether-1.svg" alt="USDT">
+                        <span>Tether USDT</span>
+                    </button>
+                </div>
+                
+                <div class="wallet-address" id="walletAddressSection" style="display: none;">
+                    <h3>Send Payment To</h3>
+                    <div class="address-box" id="walletAddress">
+                        EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N
+                    </div>
+                    <button class="copy-btn" id="copyBtn">Copy Address</button>
+                </div>
             </div>
         </div>
-    </div>
+
 
     <footer>
         <p class="footer-text">© 2025 Hysteriá Anvo Dynásty. Made In Stockholm. All rights reserved.</p>
@@ -983,13 +1158,25 @@
             });
             
             // Payment options
-            paymentOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const currency = this.getAttribute('data-currency');
-                    walletAddress.textContent = wallets[currency];
-                    walletAddressSection.style.display = 'block';
+        paymentOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const currency = this.getAttribute('data-currency');
+                walletAddress.textContent = wallets[currency];
+                walletAddressSection.style.display = 'block';
+                
+                // Плавно прокручиваем к адресу кошелька
+                walletAddressSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
                 });
+                
+                // Делаем кнопку копирования "липкой" на мобильных
+                if (window.innerWidth <= 767) {
+                    copyBtn.style.position = 'sticky';
+                    copyBtn.style.bottom = '1rem';
+                }
             });
+        });
             
             // Copy wallet address
             copyBtn.addEventListener('click', function() {
